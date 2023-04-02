@@ -1,0 +1,16 @@
+server.port: 8080
+spring:
+  application.name: web-app
+  profiles.active: dev
+  cloud.vault:
+    uri: http://localhost:8200
+    authentication: APPROLE
+    app-role:
+      role_id: c6b501e3-b006-c4c1-a03d-57e1944e1285
+      secret_id: ced7c279-30fe-73d4-bbf9-470890a78ad8
+      role: web-app
+      app-role-path: approle
+  config.import: vault://secret/${spring.application.name}/${spring.profiles.active}/database
+
+logging.level.root: INFO
+logging.level.org.springframework.vault: DEBUG
