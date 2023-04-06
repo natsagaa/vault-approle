@@ -116,7 +116,53 @@ This apps demonstrates how to authenticate to HashiCorp Vault using token authen
    }
    ```
 
-Retrieve secret from Spring Boot Application
+### Create a policy
+
+In order to safeguard our secrets, you need a policy that tells what secrets an approle can access in the Vault and what it can do with secrets. 
+Without a policy, you can authenticate to Vault with approle but you won't be able to retrieve a secret. 
+The steps to create a policy is not complicated. You create the policy either in CLI, via cURL/Postman or Web UI. The CLI and Web UI are the easiest way to create so I will talk about them.
+We will create a policy called "database" to access the secrets at web-api/dev/database and web-api/prod/database for DEV and PROD, respectively. You can read about adding secrets at these paths in my previous article. The approle that has the "database" policy will have the ability/capability/permission to read and update DEV secrets but read only ability/capability/permission for PROD secrets.
+
+##### CLI - Command Line Interface
+
+```HCL
+vault policy write database -<<EOF
+path "secret/data/web-app/dev/database" {
+    capabilities = ["read", "update"]
+}
+path "secret/data/web-app/prod/database" {
+    capabilities = ["read"]
+}
+EOF
+```
+
+### Create AppRole
+
+Next, we will create an AppRole called "web-app" with our new policy, "database."
+
+```Bash
+vault write -force auth/approle/role/web-app token_policies="database"
+```
+
+You can check if the approle "web-app" is created with the below command.
+
+```Bash
+vault read auth/approle/role/web-app
+```
+
+We will read the role_id of the "web-app" approle.
+
+```Bash
+vault read auth/approle/role/web-app/role-id
+```
+
+Then create a secret_id for the role_id.
+
+```Bash
+vault write -f auth/approle/role/web-app/secret-id
+```
+
+### Retrieve secret from Spring Boot Application
 
 Maven dependency needed for Java application to communicate with HashiCorp Vault. You can find more info about [Spring Boot Cloud Vault Token authentication](https://docs.spring.io/spring-cloud-vault/docs/current/reference/html/#vault.config.authentication.token) methods as well as other authentication methods.
 
