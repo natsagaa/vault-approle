@@ -6,8 +6,8 @@ spring:
     uri: http://localhost:8200
     authentication: APPROLE
     app-role:
-      role_id: c6b501e3-b006-c4c1-a03d-57e1944e1285
-      secret_id: ced7c279-30fe-73d4-bbf9-470890a78ad8
+      role_id: b3a95cf0-777b-6fb8-9e0d-5a7a2b09df28
+      secret_id: 178b2649-c496-f02e-dd06-8e132badd41d
       role: web-app
       app-role-path: approle
   config.import: vault://secret/${spring.application.name}/${spring.profiles.active}/database

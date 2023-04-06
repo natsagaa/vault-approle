@@ -14,6 +14,12 @@ public class VaultApproleApplication {
 	}
 
 	@Value("${username}")
+	private String url;
+
+	@Value("${driver}")
+	private String driver;
+
+	@Value("${username}")
 	private String username;
 
 	@Value("${password}")
@@ -21,6 +27,8 @@ public class VaultApproleApplication {
 
 	@PostConstruct
 	public void print(){
+		System.out.println("url is: " + driver);
+		System.out.println("driver is: " + driver);
 		System.out.println("Username is: " + username);
 		System.out.println("Password is: " + password);
 	}

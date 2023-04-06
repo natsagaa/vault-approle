@@ -31,7 +31,7 @@ This apps demonstrates how to authenticate to HashiCorp Vault using token authen
    1. Open a new terminal session and run the below command
 
       ```bash
-      export VAULT_ADDR='[http://127.0.0.1:8200](http://127.0.0.1:8200/)'
+      export VAULT_ADDR='http://127.0.0.1:8200'
       ```
 
    2. Check vault status with
@@ -116,8 +116,6 @@ This apps demonstrates how to authenticate to HashiCorp Vault using token authen
    }
    ```
 
-   - #### Postman
-
 Retrieve secret from Spring Boot Application
 
 Maven dependency needed for Java application to communicate with HashiCorp Vault. You can find more info about [Spring Boot Cloud Vault Token authentication](https://docs.spring.io/spring-cloud-vault/docs/current/reference/html/#vault.config.authentication.token) methods as well as other authentication methods.
@@ -129,7 +127,7 @@ Maven dependency needed for Java application to communicate with HashiCorp Vault
 </dependency>
 ```
 
-Spring Boot application properties for HashiCorp Vault. Don't forget to replace the <root token> with your token.
+Spring Boot application properties for HashiCorp Vault. Don't forget to replace the `rolde_id` and `secret_id` with yours.
 
 ```yaml
 server.port: 8080
@@ -138,8 +136,12 @@ spring:
   profiles.active: dev
   cloud.vault:
     uri: http://localhost:8200
-    authentication: TOKEN
-    token: <root token>
+    authentication: APPROLE
+    app-role:
+      role_id: c6b501e3-b006-c4c1-a03d-57e1944e1285
+      secret_id: ced7c279-30fe-73d4-bbf9-470890a78ad8
+      role: web-app
+      app-role-path: approle
   config.import: vault://secret/${spring.application.name}/${spring.profiles.active}/database
 ```
 
@@ -150,14 +152,14 @@ Use @Value annotation to access the property in the Vault.
 
 ```java
 @Value("${url}")
-private String username;
+private String url;
 
 @Value("${driver}")
-private String username;
+private String dirver;
 
 @Value("${username}")
 private String username;
 
 @Value("${password}")
-private String username;
+private String password;
 ```
